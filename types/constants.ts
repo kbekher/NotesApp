@@ -6,6 +6,14 @@ export const ThemeMap = {
 
 export type Theme = keyof typeof ThemeMap; // 'light' | 'dark'
 
+// Style mapping
+export const styleMap = {
+  stack: 'stack',
+  grid: 'grid',
+} as const;
+
+export type Style = keyof typeof styleMap; // 'stack' | 'grid'
+
 // Lang mapping
 export const LangMap = {
   en: 'en',

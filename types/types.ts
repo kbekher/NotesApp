@@ -3,6 +3,7 @@ export interface User {
   name: string;
   homeColor: string;
   noteColor: string;
+  cardStyle: string;
   theme: string;
   lang: string;
 }

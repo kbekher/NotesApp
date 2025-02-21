@@ -24,22 +24,23 @@ export default function HomeScreen({ navigation }: Props) {
   // const [notes, setNotes] = useState<Note[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const loadedNotes = useSelector((state: RootState) => state.notes.notes);
   const loadedUser = useSelector((state: RootState) => state.user.user);
-  
   const name = loadedUser ? loadedUser.name : 'Guest';
 
-  // console.log('Notes:', loadedNotes);
-  // console.log('Home User:', loadedUser);
+  const pinnedNotes = useSelector((state: RootState) => state.notes.pinnedNotes);
+  const allNotes = useSelector((state: RootState) => state.notes.notes);
+
+  // Combine pinned notes first and then unpinned notes in reverse order
+  const sortedNotes = [
+    ...pinnedNotes,
+    ...allNotes.filter((note) => !pinnedNotes.some((pinnedNote) => pinnedNote.id === note.id)),
+  ];
 
   // Filter notes based on search query
-  const filteredNotes = loadedNotes.filter(note =>
+  const filteredNotes = sortedNotes.filter(note =>
     note.text.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleEditNote = (note : Note) => {
-    navigation.navigate('NoteView', { noteData: note });
-  };
 
   // Load notes from AsyncStorage when the component mounts
   useEffect(() => {
@@ -51,23 +52,21 @@ export default function HomeScreen({ navigation }: Props) {
     <ThemedView style={styles.container}>
       <ThemedText style={styles.title}>Hi, {name}</ThemedText>
       <ThemedText style={styles.title}>
-        You {loadedNotes.length > 0 
-          ? `have ${loadedNotes.length} note${loadedNotes.length > 1 ? 's' : ''}` 
+        You {sortedNotes.length > 0
+          ? `have ${sortedNotes.length} note${sortedNotes.length > 1 ? 's' : ''}`
           : "don't have any notes yet."}
       </ThemedText>
 
       {/* Show search and notes if there are any */}
-      {loadedNotes.length > 0 ? (
+      {sortedNotes.length > 0 ? (
         <>
           <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
           {filteredNotes.length > 0 ? (
             filteredNotes.map(note => (
-              <TouchableOpacity style={styles.noteContainer} key={note.id} onPress={() => handleEditNote(note)}>
-                <NoteItem note={note} />
-              </TouchableOpacity>
+                <NoteItem key={note.id} note={note} navigation={navigation} />
             ))
-          ) : (
+          ) : ( 
             <ThemedText style={styles.emptyState}>No matching notes found.</ThemedText>
           )}
         </>
@@ -95,11 +94,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 16,
-  },
-  noteContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 12
   },
   notesContainer: {
     flex: 1,

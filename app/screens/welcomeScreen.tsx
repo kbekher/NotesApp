@@ -30,6 +30,7 @@ export default function WelcomeScreen({ navigation }: Props) {
         name: name,
         homeColor: "ffffff",
         noteColor: "ffffff",
+        cardStyle: 'stack',
         theme: "light",
         lang: "en",
       };

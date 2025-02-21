@@ -45,17 +45,19 @@ const notesSlice = createSlice({
     deleteNote: (state, action: PayloadAction<string>) => {
       state.notes = state.notes.filter(note => note.id !== action.payload);
     },
-
-    // Pin a note (move it to the pinned notes list)
+    // Pin a note
     pinNote: (state, action: PayloadAction<string>) => {
-      const noteToPin = state.notes.find(note => note.id === action.payload);
-      if (noteToPin) {
-        state.notes = state.notes.filter(note => note.id !== action.payload);
-        state.pinnedNotes.unshift(noteToPin);
+      const noteToPin = state.notes.find((note) => note.id === action.payload);
+      if (noteToPin && !state.pinnedNotes.find((note) => note.id === action.payload)) {
+        state.pinnedNotes.push(noteToPin);
       }
+    },
+    //Unpin a note
+    unpinNote: (state, action: PayloadAction<string>) => {
+      state.pinnedNotes = state.pinnedNotes.filter((note) => note.id !== action.payload);
     },
   },
 });
 
-export const { setNotes, addNote, updateNote, deleteNote, pinNote } = notesSlice.actions;
+export const { setNotes, addNote, updateNote, deleteNote, pinNote, unpinNote } = notesSlice.actions;
 export default notesSlice.reducer;
