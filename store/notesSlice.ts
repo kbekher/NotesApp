@@ -1,11 +1,5 @@
+import { Note } from '@/types/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-// Define the Note type
-export interface Note {
-  id: string;
-  text: string;
-  createdAt: string; // Store date as a string (ISO format)
-}
 
 // Define the initial state type
 interface NotesState {
@@ -25,6 +19,7 @@ const notesSlice = createSlice({
   name: 'notes',
   initialState,
   reducers: {
+
     // Set all notes from AsyncStorage (overwrites current notes)
     setNotes: (state, action: PayloadAction<Note[]>) => {
       state.notes = action.payload;
@@ -33,6 +28,17 @@ const notesSlice = createSlice({
     // Add a new note
     addNote: (state, action: PayloadAction<Note>) => {
       state.notes.unshift(action.payload);
+    },
+
+    // Update note
+    updateNote: (state, action: PayloadAction<Note>) => {
+      const updatedNote = action.payload;
+
+      const index = state.notes.findIndex(note => note.id === updatedNote.id);
+
+      if (index !== -1) {
+        state.notes[index] = updatedNote;
+      }
     },
 
     // Delete a note by its ID
@@ -51,5 +57,5 @@ const notesSlice = createSlice({
   },
 });
 
-export const { setNotes, addNote, deleteNote, pinNote } = notesSlice.actions;
+export const { setNotes, addNote, updateNote, deleteNote, pinNote } = notesSlice.actions;
 export default notesSlice.reducer;

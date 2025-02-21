@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { StackParamList } from '@/types/navigation';
+import { StackParamList } from '@/types/types';
 
 type SettingsNavigationProp = StackNavigationProp<StackParamList, 'Settings'>;
 
