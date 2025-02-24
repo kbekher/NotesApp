@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button, StyleSheet, TextInput } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { Feather } from '@expo/vector-icons';
 
 import { RootState } from '@/store/store';
 import { addNote, updateNote } from '@/store/notesSlice';
@@ -9,8 +11,8 @@ import { saveNotesToStorage } from '@/store/asyncStore';
 
 import { Note, StackParamList } from '@/types/types';
 
-import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
+import { ThemedBackground } from '@/components/ThemedBackground';
 
 type NoteViewNavigationProp = StackNavigationProp<StackParamList, 'NoteView'>;
 
@@ -23,7 +25,12 @@ export default function NoteView({ navigation, route }: Props) {
   const dispatch = useDispatch();
 
   // Fetch all notes from the Redux store
+  const user = useSelector((state: RootState) => state.user.user);
+  if (!user) return;
+
   const notes = useSelector((state: RootState) => state.notes.notes);
+
+  const { noteColor } = user;
 
   const [noteText, setNoteText] = useState('');
 
@@ -51,7 +58,7 @@ export default function NoteView({ navigation, route }: Props) {
         dispatch(updateNote(updatedNote));
 
         // Update the notes array in Redux and save to storage
-        updatedNotes = updatedNotes.map(note => 
+        updatedNotes = updatedNotes.map(note =>
           note.id === updatedNote.id ? updatedNote : note
         );
       } else {
@@ -75,12 +82,20 @@ export default function NoteView({ navigation, route }: Props) {
 
 
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.container}>
+      <ThemedBackground color={noteColor} />
 
-      <ThemedView style={styles.buttonContainer}>
-        <Button title="Back" onPress={handleSaveNote} />
-        <Button title="Settings" onPress={() => navigation.navigate('Settings')} />
-      </ThemedView>
+      <View style={styles.buttonContainer}>
+
+        <Pressable onPress={handleSaveNote}>
+          <Feather name="chevron-left" size={24} color="black" />
+        </Pressable>
+
+        <Pressable onPress={() => navigation.navigate('Settings')}>
+          <Feather name="more-horizontal" size={24} color="black" />
+        </Pressable>
+
+      </View>
 
       <TextInput
         style={styles.textInput}
@@ -90,7 +105,7 @@ export default function NoteView({ navigation, route }: Props) {
         multiline
       />
 
-    </ThemedView>
+    </View>
   );
 }
 

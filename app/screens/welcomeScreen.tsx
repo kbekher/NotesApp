@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParamList } from '@/types/types';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,11 @@ import { loadUserFromStorage, saveUserToStorage } from '@/store/asyncStore';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { setUser } from '@/store/userSlice';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
+import { setRandomColor } from '@/helpers/utils';
+import { LangMap, StyleMap, ThemeMap } from '@/types/constants';
+import { ThemedBackground } from '@/components/ThemedBackground';
 
 type WelcomeNavigationProp = StackNavigationProp<StackParamList, 'Welcome'>;
 
@@ -21,55 +26,66 @@ export default function WelcomeScreen({ navigation }: Props) {
   const dispatch = useDispatch();
 
   const [name, setName] = useState('');
+  const [error, setError] = useState(false);
+  const [homeColor] = useState(() => setRandomColor());
+  const [noteColor] = useState(() => setRandomColor());
 
   const loadedUser = useSelector((state: RootState) => state.user.user);
-
-  const handleProceed = () => {
-    if (name.trim()) {
-      const newUser = {
-        name: name,
-        homeColor: "ffffff",
-        noteColor: "ffffff",
-        cardStyle: 'stack',
-        theme: "light",
-        lang: "en",
-      };
-
-      // Dispatch the action to store user data in Redux
-      dispatch(setUser(newUser));
-
-      // Save user tp storage
-      saveUserToStorage(newUser);
-
-      // Save name to state or AsyncStorage here if needed
-      navigation.navigate('Home');
-    }
-  };
 
   useEffect(() => {
     i18n.changeLanguage('en');
     loadUserFromStorage();
 
-    // If the name is saved
     if (loadedUser) {
-      i18n.changeLanguage(loadedUser.lang); // set user preffered lang
-      navigation.navigate('Home'); // navigate to Home directly
+      i18n.changeLanguage(loadedUser.lang);
+      navigation.navigate('Home');
     }
-
   }, [loadedUser]);
+
+  const handleProceed = () => {
+    if (name.trim()) {
+      setError(false);
+
+      const newUser = {
+        name: name,
+        homeColor: homeColor,
+        noteColor: noteColor,
+        cardStyle: StyleMap.stack,
+        theme: ThemeMap.light,
+        lang: LangMap.en,
+      };
+
+      dispatch(setUser(newUser));
+      saveUserToStorage(newUser);
+      navigation.navigate('Home');
+    } else {
+      setError(true);
+    }
+  };
 
   return (
     <>
       {!loadedUser && (
         <View style={styles.container}>
-          <Text style={styles.title}>{t('welcome')}</Text>
+          <ThemedBackground color={homeColor} />
+
+          <ThemedText style={styles.title}>{t('welcome')}</ThemedText>
           <TextInput
-            style={styles.input}
+            style={[styles.input, error && styles.inputError]}
             placeholder="Your Name"
             value={name}
-            onChangeText={setName}
+            onChangeText={(text) => {
+              setName(text);
+              setError(false);
+            }}
           />
-          <Button title="Proceed" onPress={handleProceed} />
+
+          {error && <ThemedText style={styles.errorText}>Name is required!</ThemedText>}
+
+          <Pressable onPress={handleProceed}>
+            <Feather style={styles.icon} name="chevron-right" size={24} color="black" />
+          </Pressable>
+
         </View>
       )}
     </>
@@ -79,6 +95,7 @@ export default function WelcomeScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
@@ -88,10 +105,23 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
+    padding: 16,
     width: '80%',
     marginBottom: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    color: '#fff',
+    borderRadius: 64,
+    textAlign: 'center'
   },
+  inputError: {
+    backgroundColor: 'red',
+  },
+  errorText: {
+    color: 'red'
+  },
+  icon: {
+    padding: 28,
+    backgroundColor: '#eeeeee',
+    borderRadius: "50%",
+  }
 });

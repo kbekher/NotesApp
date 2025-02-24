@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Button, Pressable, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
 
@@ -12,6 +12,8 @@ import { ThemedText } from '@/components/ThemedText';
 import { loadNotesFromStorage } from '@/store/asyncStore';
 import { NoteItem } from '@/components/NoteItem';
 import { SearchBar } from '@/components/SearchBar';
+import { Feather } from '@expo/vector-icons';
+import { ThemedBackground } from '@/components/ThemedBackground';
 
 type HomeNavigationProp = StackNavigationProp<StackParamList, 'Home'>;
 
@@ -24,8 +26,12 @@ export default function HomeScreen({ navigation }: Props) {
   // const [notes, setNotes] = useState<Note[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const loadedUser = useSelector((state: RootState) => state.user.user);
-  const name = loadedUser ? loadedUser.name : 'Guest';
+  const user = useSelector((state: RootState) => state.user.user);
+  if (!user) return;
+
+  const { name, homeColor, cardStyle, theme, lang } = user;
+
+  console.log('Loaded user', user);
 
   const pinnedNotes = useSelector((state: RootState) => state.notes.pinnedNotes);
   const allNotes = useSelector((state: RootState) => state.notes.notes);
@@ -49,7 +55,9 @@ export default function HomeScreen({ navigation }: Props) {
 
 
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.container}>
+      <ThemedBackground color={homeColor} />
+
       <ThemedText style={styles.title}>Hi, {name}</ThemedText>
       <ThemedText style={styles.title}>
         You {sortedNotes.length > 0
@@ -57,30 +65,36 @@ export default function HomeScreen({ navigation }: Props) {
           : "don't have any notes yet."}
       </ThemedText>
 
-      {/* Show search and notes if there are any */}
-      {sortedNotes.length > 0 ? (
-        <>
-          <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <View style={styles.notesContainer}>
+        {sortedNotes.length > 0 ? (
+          <>
+            <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-          {filteredNotes.length > 0 ? (
-            filteredNotes.map(note => (
+            {filteredNotes.length > 0 ? (
+              filteredNotes.map(note => (
                 <NoteItem key={note.id} note={note} navigation={navigation} />
-            ))
-          ) : ( 
-            <ThemedText style={styles.emptyState}>No matching notes found.</ThemedText>
-          )}
-        </>
-      ) : (
-        <ThemedText style={styles.emptyState}>Create your first note!</ThemedText>
-      )}
+              ))
+            ) : (
+              <ThemedText style={styles.emptyState}>No matching notes found.</ThemedText>
+            )}
+          </>
+        ) : (
+          <ThemedText style={styles.emptyState}>Create your first note!</ThemedText>
+        )}
+      </View>
 
-      <ThemedView style={styles.notesContainer}></ThemedView>
-      {/* Navigation buttons */}
-      <ThemedView style={styles.buttonContainer}>
-        <Button title="Settings" onPress={() => navigation.navigate('Settings')} />
-        <Button title="Add Note" onPress={() => navigation.navigate('NoteView', {})} />
-      </ThemedView>
-    </ThemedView>
+      <View style={styles.buttonContainer}>
+        {/* <Button title="Settings" onPress={() => navigation.navigate('Settings')} /> */}
+        <Pressable onPress={() => navigation.navigate('Settings')}>
+          <Feather style={styles.icon} name="menu" size={24} color="black" />
+        </Pressable>
+
+        {/* <Button title="Add Note" onPress={() => navigation.navigate('NoteView', {})} /> */}
+        <Pressable onPress={() => navigation.navigate('NoteView', {})}>
+          <Feather style={styles.icon} name="plus" size={24} color="black" />
+        </Pressable>
+      </View>
+    </View>
   );
 }
 
@@ -103,7 +117,7 @@ const styles = StyleSheet.create({
     fontSize: 48,
     lineHeight: 48,
     marginTop: 100,
-    color: 'gray'
+    color: '#000'
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -116,4 +130,9 @@ const styles = StyleSheet.create({
     width: '80%',
     marginBottom: 16,
   },
+  icon: {
+    padding: 28,
+    backgroundColor: '#eeeeee',
+    borderRadius: "50%"
+  }
 });

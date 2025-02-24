@@ -1,11 +1,13 @@
+import { ColorList, Lang, Style, Theme } from "./constants";
+
 // Define the User type //TODO: use mapping
 export interface User {
   name: string;
-  homeColor: string;
-  noteColor: string;
-  cardStyle: string;
-  theme: string;
-  lang: string;
+  homeColor: ColorList;
+  noteColor: ColorList;
+  cardStyle: Style;
+  theme: Theme;
+  lang: Lang;
 }
 // Define the Note type
 export interface Note {
