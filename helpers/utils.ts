@@ -13,3 +13,7 @@ export const setRandomColor = (): keyof typeof ColorListMap => {
   const colorKeys = Object.keys(ColorListMap) as (keyof typeof ColorListMap)[];
   return colorKeys[Math.floor(Math.random() * colorKeys.length)];
 };
+
+export const isColorKey = (color: string): color is keyof typeof ColorListMap => {
+  return Object.keys(ColorListMap).includes(color);
+}

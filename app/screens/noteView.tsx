@@ -13,6 +13,7 @@ import { Note, StackParamList } from '@/types/types';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedBackground } from '@/components/ThemedBackground';
+import { Colors } from '@/types/constants';
 
 type NoteViewNavigationProp = StackNavigationProp<StackParamList, 'NoteView'>;
 
@@ -30,7 +31,7 @@ export default function NoteView({ navigation, route }: Props) {
 
   const notes = useSelector((state: RootState) => state.notes.notes);
 
-  const { noteColor } = user;
+  const { noteColor, theme } = user;
 
   const [noteText, setNoteText] = useState('');
 
@@ -83,23 +84,22 @@ export default function NoteView({ navigation, route }: Props) {
 
   return (
     <View style={styles.container}>
-      <ThemedBackground color={noteColor} />
+      <ThemedBackground color={noteColor} theme={theme} />
 
       <View style={styles.buttonContainer}>
 
         <Pressable onPress={handleSaveNote}>
-          <Feather name="chevron-left" size={24} color="black" />
+          <Feather name="chevron-left" size={24} color={Colors[theme].text}/>
         </Pressable>
 
         <Pressable onPress={() => navigation.navigate('Settings')}>
-          <Feather name="more-horizontal" size={24} color="black" />
+          <Feather name="more-horizontal" size={24} color={Colors[theme].text} />
         </Pressable>
 
       </View>
 
       <TextInput
         style={styles.textInput}
-        placeholder="Type your note here..."
         value={noteText}
         onChangeText={setNoteText}
         multiline

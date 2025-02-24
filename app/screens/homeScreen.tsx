@@ -14,6 +14,7 @@ import { NoteItem } from '@/components/NoteItem';
 import { SearchBar } from '@/components/SearchBar';
 import { Feather } from '@expo/vector-icons';
 import { ThemedBackground } from '@/components/ThemedBackground';
+import { Colors } from '@/types/constants';
 
 type HomeNavigationProp = StackNavigationProp<StackParamList, 'Home'>;
 
@@ -56,7 +57,7 @@ export default function HomeScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <ThemedBackground color={homeColor} />
+      <ThemedBackground color={homeColor} theme={theme} />
 
       <ThemedText style={styles.title}>Hi, {name}</ThemedText>
       <ThemedText style={styles.title}>
@@ -86,12 +87,12 @@ export default function HomeScreen({ navigation }: Props) {
       <View style={styles.buttonContainer}>
         {/* <Button title="Settings" onPress={() => navigation.navigate('Settings')} /> */}
         <Pressable onPress={() => navigation.navigate('Settings')}>
-          <Feather style={styles.icon} name="menu" size={24} color="black" />
+          <Feather style={styles.icon} name="menu" size={24} color={Colors[theme].text} />
         </Pressable>
 
         {/* <Button title="Add Note" onPress={() => navigation.navigate('NoteView', {})} /> */}
         <Pressable onPress={() => navigation.navigate('NoteView', {})}>
-          <Feather style={styles.icon} name="plus" size={24} color="black" />
+          <Feather style={styles.icon} name="plus" size={24} color={Colors[theme].text} />
         </Pressable>
       </View>
     </View>
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     paddingTop: 100,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   title: {
     fontSize: 24,
@@ -118,7 +119,6 @@ const styles = StyleSheet.create({
     fontSize: 48,
     lineHeight: 48,
     marginTop: 100,
-    color: '#000'
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     padding: 28,
-    backgroundColor: '#eeeeee',
+    backgroundColor: '#1b1b1b',
     borderRadius: "50%"
   }
 });

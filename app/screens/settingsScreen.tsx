@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, Pressable, TextInput } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParamList } from '@/types/types';
@@ -8,7 +8,7 @@ import { RootState } from '@/store/store';
 import { ThemedBackground } from '@/components/ThemedBackground';
 import { ThemedText } from '@/components/ThemedText';
 import { Collapsible } from '@/components/Collapsible';
-import { ColorListMap, LangMap, StyleMap, ThemeMap } from '@/types/constants';
+import { ColorListMap, Colors, LangMap, StyleMap, Theme, ThemeMap } from '@/types/constants';
 import { saveUserToStorage } from '@/store/asyncStore';
 import { setUser } from '@/store/userSlice';
 
@@ -37,11 +37,11 @@ export default function SettingsScreen({ navigation }: Props) {
   const handleGoBack = () => {
     const updatedUser = {
       name: localName.trim() !== '' ? localName : user.name,
-      homeColor: localHomeColor !== homeColor ? localHomeColor : homeColor,
-      noteColor: localNoteColor !== noteColor ? localNoteColor : noteColor,
-      cardStyle: localCardStyle !== cardStyle ? localCardStyle : cardStyle,
-      lang: localLang !== lang ? localLang : lang,
-      theme: localTheme !== theme ? localTheme : theme,
+      homeColor: localHomeColor,
+      noteColor: localNoteColor,
+      cardStyle: localCardStyle,
+      lang: localLang,
+      theme: localTheme,
     };
 
     // Check if anything changed before dispatching
@@ -53,14 +53,28 @@ export default function SettingsScreen({ navigation }: Props) {
     navigation.goBack();
   };
 
+  const handleThemeChange = (themeOption: Theme) => {
+    // Update the local theme state
+    setLocalTheme(themeOption);
+
+    // Create an updated user with the new theme.
+    const updatedUser = {
+      ...user,
+      theme: themeOption,
+    };
+
+    // Immediately update the Redux store and AsyncStorage.
+    dispatch(setUser(updatedUser));
+    saveUserToStorage(updatedUser);
+  }
 
   return (
     <View style={styles.container}>
-      <ThemedBackground />
+      <ThemedBackground theme={localTheme} />
 
       <View style={styles.buttonContainer}>
         <Pressable onPress={handleGoBack} >
-          <Feather name="chevron-left" size={24} color="black" />
+          <Feather name="chevron-left" size={24} color={Colors[theme].text} />
         </Pressable>
       </View>
 
@@ -120,13 +134,12 @@ export default function SettingsScreen({ navigation }: Props) {
         <ThemedText type="subtitle">Theme</ThemedText>
         <Collapsible title={localTheme}>
           {(Object.keys(ThemeMap) as (keyof typeof ThemeMap)[]).map((themeOption) => (
-            <Pressable key={themeOption} onPress={() => setLocalTheme(themeOption)}>
+            <Pressable key={themeOption} onPress={() => handleThemeChange(themeOption)}>
               <ThemedText>{themeOption}</ThemedText>
             </Pressable>
           ))}
         </Collapsible>
       </View>
-
 
     </View>
   );

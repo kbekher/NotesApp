@@ -1,21 +1,24 @@
-import { ColorList, ColorListMap } from '@/types/constants';
+import { getThemeColors } from '@/helpers/themeColors';
+import { isColorKey } from '@/helpers/utils';
+import { ColorList, ColorListMap, Colors, Theme } from '@/types/constants';
 import React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 
 type ThemedBackgroundProps = {
-  color?: keyof typeof ColorListMap; // Expect a key from the ColorListMap object
+  color?: ColorList; // Expect a key from the ColorListMap object
+  theme: Theme
 };
 
-export function ThemedBackground({ color }: ThemedBackgroundProps) {
+export function ThemedBackground({ color, theme }: ThemedBackgroundProps) {
   const { width, height } = Dimensions.get('window');
   const spacing = 21;
   const columns = Math.ceil(width / spacing);
   const rows = Math.ceil(height / spacing);
 
-  const colorValue = color ? ColorListMap[color] : "#ffffff"; // Default to white if no color is passed
+  const { background, pattern } = getThemeColors(theme, color);
 
   return (
-    <View style={[styles.container, { backgroundColor: colorValue }]}>
+    <View style={[styles.container, { backgroundColor: background }]}>
       {/* Pattern Layer */}
       <View style={styles.patternContainer}>
         {Array.from({ length: rows }).map((_, row) =>
@@ -27,6 +30,7 @@ export function ThemedBackground({ color }: ThemedBackgroundProps) {
                 {
                   left: col * spacing,
                   top: row * spacing,
+                  backgroundColor: pattern,
                 },
               ]}
             />
@@ -51,6 +55,5 @@ const styles = StyleSheet.create({
     width: 9,
     height: 9,
     borderRadius: 4.5,
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
   },
 });

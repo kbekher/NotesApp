@@ -40,7 +40,7 @@ export default function WelcomeScreen({ navigation }: Props) {
       i18n.changeLanguage(loadedUser.lang);
       navigation.navigate('Home');
     }
-  }, [loadedUser]);
+  }, []);
 
   const handleProceed = () => {
     if (name.trim()) {
@@ -67,7 +67,7 @@ export default function WelcomeScreen({ navigation }: Props) {
     <>
       {!loadedUser && (
         <View style={styles.container}>
-          <ThemedBackground color={homeColor} />
+          <ThemedBackground theme='light' color={homeColor} />
 
           <ThemedText style={styles.title}>{t('welcome')}</ThemedText>
           <TextInput
