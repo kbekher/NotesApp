@@ -1,9 +1,9 @@
-import { ColorList } from '@/types/constants';
+import { ColorList, ColorListMap } from '@/types/constants';
 import React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 
 type ThemedBackgroundProps = {
-  color?: ColorList | "#ffffff";
+  color?: keyof typeof ColorListMap; // Expect a key from the ColorListMap object
 };
 
 export function ThemedBackground({ color }: ThemedBackgroundProps) {
@@ -12,8 +12,10 @@ export function ThemedBackground({ color }: ThemedBackgroundProps) {
   const columns = Math.ceil(width / spacing);
   const rows = Math.ceil(height / spacing);
 
+  const colorValue = color ? ColorListMap[color] : "#ffffff"; // Default to white if no color is passed
+
   return (
-    <View style={[styles.container, { backgroundColor: color }]}>
+    <View style={[styles.container, { backgroundColor: colorValue }]}>
       {/* Pattern Layer */}
       <View style={styles.patternContainer}>
         {Array.from({ length: rows }).map((_, row) =>
