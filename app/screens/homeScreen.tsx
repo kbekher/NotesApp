@@ -87,12 +87,12 @@ export default function HomeScreen({ navigation }: Props) {
       <View style={styles.buttonContainer}>
         {/* <Button title="Settings" onPress={() => navigation.navigate('Settings')} /> */}
         <Pressable onPress={() => navigation.navigate('Settings')}>
-          <Feather style={styles.icon} name="menu" size={24} color={Colors[theme].text} />
+          <Feather style={[styles.icon, { backgroundColor: Colors[theme].iconBg }]} name="menu" size={24} color={Colors[theme].text} />
         </Pressable>
 
         {/* <Button title="Add Note" onPress={() => navigation.navigate('NoteView', {})} /> */}
         <Pressable onPress={() => navigation.navigate('NoteView', {})}>
-          <Feather style={styles.icon} name="plus" size={24} color={Colors[theme].text} />
+          <Feather style={[styles.icon, { backgroundColor: Colors[theme].iconBg }]} name="plus" size={24} color={Colors[theme].text} />
         </Pressable>
       </View>
     </View>
@@ -133,7 +133,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     padding: 28,
-    backgroundColor: '#1b1b1b',
-    borderRadius: "50%"
+    borderRadius: 50
   }
 });

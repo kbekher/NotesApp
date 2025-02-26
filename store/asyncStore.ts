@@ -1,3 +1,6 @@
+// import axios from 'axios';  // import axios for getting data from API
+// TODO: change it to IP Backend
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setNotes } from './notesSlice';
 import { Note, User } from '@/types/types';

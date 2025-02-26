@@ -93,7 +93,7 @@ export default function NoteView({ navigation, route }: Props) {
         </Pressable>
 
         <Pressable onPress={() => navigation.navigate('Settings')}>
-          <Feather name="more-horizontal" size={24} color={Colors[theme].text} />
+          <Feather  style={[styles.icon, { backgroundColor: Colors[theme].iconBg }]} name="more-horizontal" size={24} color={Colors[theme].text} />
         </Pressable>
 
       </View>
@@ -124,4 +124,8 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     height: '100%'
   },
+  icon: {
+    borderRadius: 50,
+    padding: 4
+  }
 });

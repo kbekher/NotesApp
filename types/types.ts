@@ -12,8 +12,9 @@ export interface User {
 // Define the Note type
 export interface Note {
   id: string;
-  text: string;
+  text: string; // TODO: store text by the style
   createdAt: string; // Store date as a string (ISO format)
+  // isPinned: boolean; //TODO:
 }
 
 export type StackParamList = {

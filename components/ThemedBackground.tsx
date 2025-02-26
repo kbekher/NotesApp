@@ -1,6 +1,5 @@
 import { getThemeColors } from '@/helpers/themeColors';
-import { isColorKey } from '@/helpers/utils';
-import { ColorList, ColorListMap, Colors, Theme } from '@/types/constants';
+import { ColorList, Theme } from '@/types/constants';
 import React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 

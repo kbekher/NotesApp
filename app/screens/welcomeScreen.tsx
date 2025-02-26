@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     padding: 28,
-    backgroundColor: '#eeeeee',
-    borderRadius: "50%",
+    backgroundColor: 'rgba(255, 255, 255, 0.36)', //default to light theme
+    borderRadius: 50,
   }
 });

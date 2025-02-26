@@ -42,7 +42,7 @@ export const Colors = {
   light: {
     text: '#000',
     background: '#fff',
-    opacity: 36 //TODO:
+    iconBg: 'rgba(27, 27, 27, 0.36)',
     // tint: tintColorLight,
     // icon: '#687076',
     // tabIconDefault: '#687076',
@@ -51,7 +51,7 @@ export const Colors = {
   dark: {
     text: '#fff',
     background: '#000',
-    opacity: 1 //TODO:
+    iconBg: 'rgba(255, 255, 255, 0.36)',
     // tint: tintColorDark,
     // icon: '#9BA1A6',
     // tabIconDefault: '#9BA1A6',
