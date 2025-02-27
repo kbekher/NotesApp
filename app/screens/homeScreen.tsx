@@ -37,6 +37,8 @@ export default function HomeScreen({ navigation }: Props) {
   const pinnedNotes = useSelector((state: RootState) => state.notes.pinnedNotes);
   const allNotes = useSelector((state: RootState) => state.notes.notes);
 
+  console.log('All notes:', allNotes);
+
   // Combine pinned notes first and then unpinned notes in reverse order
   const sortedNotes = [
     ...pinnedNotes,
@@ -45,7 +47,7 @@ export default function HomeScreen({ navigation }: Props) {
 
   // Filter notes based on search query
   const filteredNotes = sortedNotes.filter(note =>
-    note.text.toLowerCase().includes(searchQuery.toLowerCase())
+    note.text.join(' ').toLowerCase().includes(searchQuery.toLowerCase())
   );
 
 

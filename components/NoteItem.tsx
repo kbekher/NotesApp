@@ -58,7 +58,7 @@ export const NoteItem: React.FC<Props> = ({ note, navigation }) => {
       <Animated.View style={styles.cardContainer}>
 
         <TouchableOpacity style={styles.card} onPress={() => handleEditNote(note)}>
-          <ThemedText style={styles.text}>{text}</ThemedText>
+          <ThemedText style={styles.text}>{text.join(' ')}</ThemedText> //TODO:
           <ThemedText style={styles.text}>{month} <ThemedText>{day}</ThemedText></ThemedText>
         </TouchableOpacity>
 

@@ -43,6 +43,7 @@ export const Colors = {
     text: '#000',
     background: '#fff',
     iconBg: 'rgba(27, 27, 27, 0.36)',
+    toolbar: 'rgba(255, 255, 255, 0.8)'
     // tint: tintColorLight,
     // icon: '#687076',
     // tabIconDefault: '#687076',
@@ -52,6 +53,7 @@ export const Colors = {
     text: '#fff',
     background: '#000',
     iconBg: 'rgba(255, 255, 255, 0.36)',
+    toolbar: 'rgba(0, 0, 0, 1)'
     // tint: tintColorDark,
     // icon: '#9BA1A6',
     // tabIconDefault: '#9BA1A6',
