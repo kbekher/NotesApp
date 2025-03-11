@@ -9,11 +9,12 @@ import { RootState } from '@/store/store';
 import { addNote, updateNote } from '@/store/notesSlice';
 import { saveNotesToStorage } from '@/store/asyncStore';
 
-import { Note, StackParamList, StyledText } from '@/types/types';
+import { Note, StackParamList } from '@/types/types';
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedBackground } from '@/components/ThemedBackground';
+import ThemedText from '@/components/ThemedText';
+import ThemedBackground from '@/components/ThemedBackground';
 import { ColorListMap, Colors } from '@/types/constants';
+import Editor from '@/components/dom-components/hello-dom';
 
 type NoteViewNavigationProp = StackNavigationProp<StackParamList, 'NoteView'>;
 
@@ -33,28 +34,39 @@ export default function NoteView({ navigation, route }: Props) {
   const { noteColor, theme } = user;
 
   // State for styled text
-  const [noteText, setNoteText] = useState<StyledText[]>([]);
+  // const [noteText, setNoteText] = useState('');
 
-  // State for selected text style
-  const [selectedStyle, setSelectedStyle] = useState<"headline" | "bold" | "normal" | "none">("normal");
+  const [plainText, setPlainText] = useState('');
+  const [editorState, setEditorState] = useState<string | null>(null);
+
+  console.log(plainText);
+  console.log(editorState);
+  console.log(typeof editorState);
 
   // Check if we are editing an existing note
   const noteData = route?.params?.noteData; // Get the note passed from HomeView
+
+  // State for selected text style TODO: delete
+  // const [selectedStyle, setSelectedStyle] = useState<"headline" | "bold" | "normal" | "none">("normal");
+
   useEffect(() => {
     if (noteData) {
-      setNoteText(noteData.text); // Set initial text to the passed note's text
+      setEditorState(noteData.editorState); // Set the existing note text to the editor state
+      setPlainText(noteData.plainText); // Set the existing note text to the editor state
     }
   }, [noteData]);
 
   const handleSaveNote = () => {
-    if (noteText.length > 0) {
+    if (editorState && editorState.trim() !== '') {
       let updatedNotes = [...notes];
 
       if (noteData) {
         // If editing, update the existing note
         const updatedNote: Note = {
           ...noteData,
-          text: noteText,
+          plainText: plainText,
+          editorState: editorState, // Store as a string for Redux
+          // text: JSON.stringify(editorState), // Store as a string for Redux
           createdAt: new Date().toISOString(),
         };
 
@@ -69,7 +81,9 @@ export default function NoteView({ navigation, route }: Props) {
         // If creating a new note, add to the notes list
         const newNote: Note = {
           id: Date.now().toString(),
-          text: noteText,
+          plainText: plainText,
+          editorState: editorState, // Store as a string for Redux
+          // text: JSON.stringify(editorState), // Store as a string for Redux
           createdAt: new Date().toISOString(),
         };
 
@@ -84,46 +98,6 @@ export default function NoteView({ navigation, route }: Props) {
     navigation.goBack(); // Navigate back to the home view
   }
 
-  // Apply a text style to the last text segment
-  const applyStyle = (styleType: "headline" | "bold" | "normal" | "none") => {
-    setSelectedStyle(styleType);
-
-    setNoteText((prevText) => {
-      if (prevText.length === 0) return prevText; // No text to style
-
-      return prevText.map((segment, index) => {
-        if (index === prevText.length - 1) {
-          return { ...segment, style: segment.style === styleType ? "none" : styleType };
-        }
-        return segment;
-      });
-    });
-  };
-
-  // Toggle checklist items for the entire text
-  const toggleChecklist = () => {
-    setNoteText((prevText) =>
-      prevText.map((segment) => ({
-        ...segment,
-        isChecklist: !segment.isChecklist, // Toggle checklist state
-      }))
-    );
-  };
-
-  const handleTextChange = (text: string) => {
-    setNoteText((prevText) => {
-      // Split the input text by words while preserving spaces
-      const words = text.split(/(\s+)/); // Keeps spaces as separate elements
-  
-      const updatedText: StyledText[] = words.map((word, index) => ({
-        content: word,
-        style: selectedStyle,
-        isChecklist: false, // Keep default checklist state
-      }));
-  
-      return updatedText;
-    });
-  };
 
   return (
     <View style={styles.container}>
@@ -140,16 +114,15 @@ export default function NoteView({ navigation, route }: Props) {
         </Pressable>
       </View>
 
-      {/* Styled Text Input */}
-      <TextInput
-        style={styles.textInput}
-        value={noteText.map((item) => item.content).join(" ")}
-        onChangeText={handleTextChange}
-        multiline
-      />
+      <View style={{ flex: 1 }}> 
+        <Editor 
+          setPlainText={setPlainText}
+          setEditorState={setEditorState}
+        /> 
+      </View>
 
       {/* Text Style Toolbar */}
-      <View style={styles.toolbarContainer}>
+      {/* <View style={styles.toolbarContainer}>
         <View style={[styles.toolbar, { backgroundColor: Colors[theme].toolbar }]}>
           <Pressable onPress={() => applyStyle("headline")}>
             <Text style={[styles.headlineBtn, selectedStyle === "headline" && { color: ColorListMap[noteColor] }]}>
@@ -175,12 +148,12 @@ export default function NoteView({ navigation, route }: Props) {
         </View>
 
         <View style={[styles.checkmark, { backgroundColor: Colors[theme].toolbar }]}>
-          <Pressable onPress={toggleChecklist}>
+          <Pressable>
             <Feather name="list" size={24} color={Colors[theme].text} />
           </Pressable>
         </View>
 
-      </View>
+      </View> */}
     </View>
   );
 }

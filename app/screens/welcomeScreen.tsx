@@ -9,11 +9,11 @@ import { loadUserFromStorage, saveUserToStorage } from '@/store/asyncStore';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { setUser } from '@/store/userSlice';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
+import ThemedView from '@/components/ThemedView';
+import ThemedText from '@/components/ThemedText';
 import { setRandomColor } from '@/helpers/utils';
 import { LangMap, StyleMap, ThemeMap } from '@/types/constants';
-import { ThemedBackground } from '@/components/ThemedBackground';
+import ThemedBackground from '@/components/ThemedBackground';
 
 type WelcomeNavigationProp = StackNavigationProp<StackParamList, 'Welcome'>;
 

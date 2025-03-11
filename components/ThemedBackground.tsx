@@ -8,7 +8,7 @@ type ThemedBackgroundProps = {
   theme: Theme
 };
 
-export function ThemedBackground({ color, theme }: ThemedBackgroundProps) {
+export default function ThemedBackground({ color, theme }: ThemedBackgroundProps) {
   const { width, height } = Dimensions.get('window');
   const spacing = 21;
   const columns = Math.ceil(width / spacing);

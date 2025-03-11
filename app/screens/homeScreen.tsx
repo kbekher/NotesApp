@@ -7,13 +7,13 @@ import { RootState } from '@/store/store';
 
 import { Note, StackParamList } from '@/types/types';
 
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
+import ThemedView from '@/components/ThemedView';
+import ThemedText from '@/components/ThemedText';
 import { loadNotesFromStorage } from '@/store/asyncStore';
 import { NoteItem } from '@/components/NoteItem';
 import { SearchBar } from '@/components/SearchBar';
 import { Feather } from '@expo/vector-icons';
-import { ThemedBackground } from '@/components/ThemedBackground';
+import ThemedBackground from '@/components/ThemedBackground';
 import { Colors } from '@/types/constants';
 
 type HomeNavigationProp = StackNavigationProp<StackParamList, 'Home'>;
@@ -47,7 +47,7 @@ export default function HomeScreen({ navigation }: Props) {
 
   // Filter notes based on search query
   const filteredNotes = sortedNotes.filter(note =>
-    note.text.join(' ').toLowerCase().includes(searchQuery.toLowerCase())
+    note.plainText.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
 

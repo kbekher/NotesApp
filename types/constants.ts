@@ -16,6 +16,14 @@ export const LangMap = {
 
 export type Lang = keyof typeof LangMap; // 'en' | 'de' | 'ua' | 'ru'
 
+// TextStyle mapping
+export const TextStyleMap = {
+  headline: 'headline',
+  bold: 'bold',
+  paragraph: 'paragraph',
+} as const;
+
+export type TextStyle = keyof typeof TextStyleMap; // 'headline' | 'bold' | 'normal' 
 // ColorList mapping
 export const ColorListMap = {
   purple: '#AA6AFE',

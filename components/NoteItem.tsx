@@ -5,12 +5,13 @@ import { Feather, MaterialIcons } from '@expo/vector-icons';
 
 import { deleteNote, pinNote, unpinNote } from '@/store/notesSlice';
 
-import { formatDate } from '@/helpers/utils';
+import { convertLexicalToHtml, formatDate } from '@/helpers/utils';
 
-import { ThemedText } from './ThemedText';
+import ThemedText from './ThemedText';
 import { Note, StackParamList } from '@/types/types';
 import { RootState } from '@/store/store';
 import { StackNavigationProp } from '@react-navigation/stack';
+import WebView from 'react-native-webview';
 
 
 const SWIPE_THRESHOLD = -50;
@@ -24,7 +25,9 @@ type Props = {
 };
 
 export const NoteItem: React.FC<Props> = ({ note, navigation }) => {
-  const { id, text, createdAt } = note;
+  const { id, editorState, createdAt } = note;
+  const htmlContent = convertLexicalToHtml(editorState);
+  console.log(htmlContent);
   const { month, day } = formatDate(createdAt);
   const dispatch = useDispatch();
   const pinnedNotes = useSelector((state: RootState) => state.notes.pinnedNotes);
@@ -44,7 +47,6 @@ export const NoteItem: React.FC<Props> = ({ note, navigation }) => {
     dispatch(deleteNote(id));
   }
 
-
   const handlePinNote = () => {
     if (isPinned) {
       dispatch(unpinNote(id));
@@ -58,7 +60,13 @@ export const NoteItem: React.FC<Props> = ({ note, navigation }) => {
       <Animated.View style={styles.cardContainer}>
 
         <TouchableOpacity style={styles.card} onPress={() => handleEditNote(note)}>
-          <ThemedText style={styles.text}>{text.join(' ')}</ThemedText> //TODO:
+          {/* <ThemedText style={styles.text}>{text}</ThemedText> */}
+          <WebView
+            originWhitelist={['*']}
+            source={{ html: `<html><body>${htmlContent}</body></html>` }}
+            style={styles.webview}
+            scrollEnabled={false}
+          />
           <ThemedText style={styles.text}>{month} <ThemedText>{day}</ThemedText></ThemedText>
         </TouchableOpacity>
 
@@ -98,7 +106,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     width: '100%',
-    position: 'relative'
+    position: 'relative',
+    height: 200, 
+  },
+  webview: {
+    minHeight: 80, // Try increasing this dynamically
+    width: '100%',
+    backgroundColor: 'transparent',
   },
   text: {
     fontSize: 28,

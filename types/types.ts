@@ -1,4 +1,4 @@
-import { ColorList, Lang, Style, Theme } from "./constants";
+import { ColorList, Lang, Style, TextStyle, Theme } from "./constants";
 
 // Define the User type //TODO: use mapping
 export interface User {
@@ -12,7 +12,8 @@ export interface User {
 // Define the Note type
 export interface Note {
   id: string;
-  text: StyledText[]; // TODO: stringify for homw view and use as object for note view
+  editorState: string;
+  plainText: string; // TODO: stringify for homeview and use as object for note view
   createdAt: string; // Store date as a string (ISO format)
   // isPinned: boolean; //TODO:
 }
@@ -24,8 +25,4 @@ export type StackParamList = {
   Settings: undefined;
 };
 
-export interface StyledText {
-  content: string; // The actual text
-  style: 'headline' | 'bold' | 'normal' | 'none'; // Style type
-  isChecklist?: boolean; // Whether it's part of a checklist
-}
+
